@@ -1,5 +1,6 @@
 # github-contribution-log
-# Contribution [#]: [Issue Title]
+# Contribution [#10769]: [Show "Attention needed" and "Demaged" state when allocating
+]
 
 **Contribution Number:** [1]  
 **Student:** [Alonso Lopez]  
