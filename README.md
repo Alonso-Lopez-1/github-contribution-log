@@ -123,7 +123,7 @@ Do not use the shopping-cart button, because that opens the Purchase Order workf
 
 **Match:** StatusRenderer (StatusRenderer.tsx:178) already renders the exact status badge used in tables. getStatusCodes (StatusRenderer.tsx:85) is a non-hook lookup — needed since RenderStockItem is called as a plain function.
 
-**Plan:** [Step-by-step implementation plan]
+**Plan:**
 1. In Stock.tsx, import StatusRenderer and getStatusCodes
 2. In RenderStockItem, flag items whose status is ATTENTION or DAMAGED
 3. Append a StatusRenderer badge to the existing secondary group, only when flagged
