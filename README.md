@@ -112,7 +112,7 @@ Do not use the shopping-cart button, because that opens the Purchase Order workf
 ### Reproduction Evidence
 
 - **Commit showing reproduction:**
-- **Screenshots/logs:** [Issue reproduction screenshot](Screenshots/Issue_Reproduction.png)
+- **Screenshots/logs:** ![InvenTree issue reproduction](Screenshots/Issue_Reproduction.png)
 - **My findings:** 
 
 ---
