@@ -22,19 +22,19 @@ From reading the issue thread, I understand that this issue has a practical impa
 
 ### Problem Description
 
-[In your own words, what's broken or missing?]
+When allocating stock, the drop down menu should show a label or badge indicating if the part is labeled as Attention Needed or Damaged. 
 
 ### Expected Behavior
 
-[What should happen?]
+Stock marked Attention Needed or Damaged should have a visible label or badge so the person allocating it knows about the condition before selecting it.
 
 ### Current Behavior
 
-[What actually happens?]
+The dropdown displays information such as the part name, IPN, location, batch, and quantity, but it does not display the Attention Needed or Damaged status.
 
 ### Affected Components
 
-[Which parts of the codebase are involved?]
+The issue is specifically reproduced in the Stock Item dropdown inside the Allocate Stock window.
 
 ---
 
@@ -42,50 +42,95 @@ From reading the issue thread, I understand that this issue has a practical impa
 
 ### Environment Setup
 
-[Notes on setting up your local development environment - challenges you faced, how you solved them]
+I cloned my InvenTree fork and opened the repository using the included VS Code Dev Container. The initial container setup failed because my Linux user did not have permission to run Docker. I added my user to the docker group, logged out, and logged back in.
+
+I then used Dev Containers: Reopen in Container. This built the development image and started the InvenTree, PostgreSQL, and Redis containers.
+
+Inside the Dev Container, I started the backend server:
+
+invoke dev.server
+
+In a second Dev Container terminal, I started the frontend server:
+
+invoke dev.frontend-server
+
+I opened the frontend at http://localhost:5173 and logged in with a local superuser account.
+
+Working Branch: https://github.com/Alonso-Lopez-1/InvenTree/tree/fix-issue-10769
 
 ### Steps to Reproduce
 
-1. [Step 1]
-2. [Step 2]
-3. [Observed result]
+1. Navigate to **Stock → Stock Locations** and create a location named `Main Warehouse`.
+
+2. Create a new stock-enabled component part with the following information:
+
+   * Name: `Test Part`
+   * IPN: `TEST-COMP-001`
+
+3. Add multiple stock items for `Test Part` in `Main Warehouse`.
+
+4. Give the stock items different statuses. At minimum, create:
+
+   * One stock item with the normal or OK status
+   * One stock item with the `Attention Needed` status
+   * One stock item with the `Damaged` status
+
+5. Optionally assign each stock item a unique batch code, such as:
+
+   * `NORMAL-BATCH`
+   * `ATTENTION-BATCH`
+   * `DAMAGED-BATCH`
+
+   This makes the individual stock items easier to identify.
+
+6. Open each stock item and confirm that its status was saved correctly.
+
+7. Create a new part named `Test Assembly` and configure it as an assembly that can be manufactured.
+
+8. Open the **Bill of Materials** tab for `Test Assembly`.
+
+9. Add `Test Part` as a BOM item and set its required quantity to `1`.
+
+10. Create a Build Order for `Test Assembly`. A build quantity greater than `1`, such as `3`, can be used to make it easier to compare and allocate multiple stock items.
+
+11. Issue the Build Order if it is still in the `Pending` state.
+
+12. Open the Build Order and navigate to the **Required Parts** tab.
+
+13. Select the row for `Test Part`.
+
+14. Choose the **Allocate Stock** action from the available toolbar or row actions.
+
+Do not use the shopping-cart button, because that opens the Purchase Order workflow for ordering missing parts rather than allocating existing stock.
+
+15. In the **Allocate Stock** window, select `Main Warehouse` as the source location if necessary.
+
+16. Open the **Stock Item** dropdown.
+
+17. Locate the stock items that were marked `Attention Needed` and `Damaged`.
 
 ### Reproduction Evidence
 
-- **Commit showing reproduction:** [Link to commit in your fork]
+- **Commit showing reproduction:**
 - **Screenshots/logs:** [If applicable]
-- **My findings:** [What you discovered during reproduction]
+- **My findings:** 
 
 ---
 
 ## Solution Approach
 
-### Analysis
+**Understand:** The Allocate Stock dropdown shows part, location, batch, and quantity but not stock status, so users can't see an item is "Attention needed" or "Damaged" before allocating it.
 
-[Your analysis of the root cause - what's causing the issue?]
-
-### Proposed Solution
-
-[High-level description of your fix approach]
-
-### Implementation Plan
-
-Using UMPIRE framework (adapted):
-
-**Understand:** [Restate the problem]
-
-**Match:** [What similar patterns/solutions exist in the codebase?]
+**Match:** StatusRenderer (StatusRenderer.tsx:178) already renders the exact status badge used in tables. getStatusCodes (StatusRenderer.tsx:85) is a non-hook lookup — needed since RenderStockItem is called as a plain function.
 
 **Plan:** [Step-by-step implementation plan]
-1. [Modify file X to do Y]
-2. [Add function Z]
-3. [Update tests]
+1. In Stock.tsx, import StatusRenderer and getStatusCodes
+2. In RenderStockItem, flag items whose status is ATTENTION or DAMAGED
+3. Append a StatusRenderer badge to the existing secondary group, only when flagged
 
-**Implement:** [Link to your branch/commits as you work]
+**Review:** Will self-review against project CONTRIBUTING.md, run frontend lint + type-check, and follow commit conventions before opening PR.
 
-**Review:** [Self-review checklist - does it follow the project's contribution guidelines?]
-
-**Evaluate:** [How will you verify it works?]
+**Evaluate:** Reproduction steps above should now show a yellow badge on flagged items and none on OK items. Confirm no regression in the Stock Tracking table.
 
 ---
 
