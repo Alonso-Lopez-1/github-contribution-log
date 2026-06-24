@@ -194,7 +194,7 @@ Before opening the final PR, I plan to either find a safer way to scope the badg
 ### Code Changes
 
 - **Files modified:** [src/frontend/src/components/render/Stock.tsx]
-- **Key commits:** [[Links to important commits](https://github.com/Alonso-Lopez-1/InvenTree/tree/fix-issue-10769)]
+- **Key commits:** [[Commit Link Here](https://github.com/Alonso-Lopez-1/InvenTree/tree/fix-issue-10769)]
 - **Approach decisions:** [I reused InvenTree's existing StatusRenderer so the new badge matches the rest of the UI. I limited the badge logic to the Attention Needed and Damaged statuses because those are the statuses requested in the issue.]
 
 ---
