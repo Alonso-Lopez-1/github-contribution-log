@@ -138,26 +138,54 @@ Do not use the shopping-cart button, because that opens the Purchase Order workf
 
 ### Unit Tests
 
-- [ ] Test case 1: [Description]
-- [ ] Test case 2: [Description]
-- [ ] Test case 3: [Description]
+- [ ] Test case 1: [Confirm that a stock item with the ATTENTION status renders an Attention Needed status badge.]
+- [ ] Test case 2: [Confirm that a stock item with the DAMAGED status renders a Damaged status badge.]
+- [ ] Test case 3: [Confirm that a stock item with the normal or OK status does not render an extra status badge.]
+
+I have not added automated frontend tests yet. Since this is a small UI rendering change, my first validation step was manual testing in the local development environment. My next step is to look for existing frontend renderer tests or dropdown tests in InvenTree and model a focused test after the existing project pattern.
 
 ### Integration Tests
 
-- [ ] Integration scenario 1
-- [ ] Integration scenario 2
+- [ ] Integration scenario 1: Open a Build Order allocation window and confirm that the Stock Item dropdown shows status badges for Attention Needed and Damaged stock items.
+- [ ] Integration scenario 2: Confirm that the dropdown still allows selecting and allocating stock normally after the badge rendering change.
 
 ### Manual Testing
 
-[What you tested manually and results]
+Manual validation completed so far:
 
+- Started the backend server with invoke dev.server.
+- Started the frontend server with invoke dev.frontend-server.
+- Created a test stock location, test part, and multiple stock items with different statuses.
+- Created a test assembly. Build Order, Sales Order, and Transfer Order. 
+- Opened the Allocate Stock window from the Build Order Required Parts tab.
+- Opened the Stock Item dropdown and confirmed that the status badge appears for the flagged stock items.
+- Confirmed that normal or OK stock items do not show the Attention Needed or Damaged badge.
+- I also attempted a more scoped opt-in approach so that the badge would only appear in allocation dropdowns, but that version broke existing dropdown behavior. I reverted to the working renderer-based implementation for now and documented the scoping concern as a follow-up item before opening the final PR.
 ---
 
 ## Implementation Notes
 
-### Week [X] Progress
+### Week [3] Progress
 
-[What you built this week, challenges faced, decisions made]
+This week, I moved from reproduction and planning into implementation for InvenTree issue #10769.
+
+What I built:
+
+Modified src/frontend/src/components/render/Stock.tsx.
+Updated RenderStockItem so stock items marked as Attention Needed or Damaged can show a compact status badge.
+Reused the existing StatusRenderer component instead of creating a new badge component.
+Used getStatusCodes(ModelType.stockitem) to look up stock status information without adding a React hook inside RenderStockItem.
+Kept the change focused on the two statuses requested in the issue, Attention Needed and Damaged.
+
+Challenges faced:
+
+My first working implementation added the badge through the shared RenderStockItem renderer. This made the badge appear in the allocation dropdown, but I realized it may also affect other places that render stock items.
+I tried an updated opt-in approach that would only enable the badge in specific allocation dropdowns. However, that version broke some existing dropdown behavior, so I reverted back to the working implementation.
+
+Decisions made:
+
+I decided to keep the working implementation for the check-in so I could show progress, document the tradeoff, and continue iterating.
+Before opening the final PR, I plan to either find a safer way to scope the badge only to allocation dropdowns or ask for feedback on whether the renderer-based approach is acceptable.
 
 ### Week [Y] Progress
 
@@ -165,9 +193,9 @@ Do not use the shopping-cart button, because that opens the Purchase Order workf
 
 ### Code Changes
 
-- **Files modified:** [List]
-- **Key commits:** [Links to important commits]
-- **Approach decisions:** [Why you chose certain approaches]
+- **Files modified:** [src/frontend/src/components/render/Stock.tsx]
+- **Key commits:** [[Links to important commits](https://github.com/Alonso-Lopez-1/InvenTree/tree/fix-issue-10769)]
+- **Approach decisions:** [I reused InvenTree's existing StatusRenderer so the new badge matches the rest of the UI. I limited the badge logic to the Attention Needed and Damaged statuses because those are the statuses requested in the issue.]
 
 ---
 
