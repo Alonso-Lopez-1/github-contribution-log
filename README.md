@@ -201,15 +201,26 @@ Before opening the final PR, I plan to either find a safer way to scope the badg
 
 ## Pull Request
 
-**PR Link:** [GitHub PR URL when submitted]
+**PR Link:** [[https://github.com/inventree/InvenTree/pull/12286](https://github.com/inventree/InvenTree/pull/12286)
 
-**PR Description:** [Draft or final PR description - much of the content above can be adapted]
+**PR Description:** 
+What does this PR do? This PR fixes InvenTree issue #10769 by displaying the “Damaged” and “Attention Needed” stock status badges in the stock allocation dropdowns for Build Orders and Sales Orders. The change uses InvenTree’s existing status badge rendering so users can identify flagged stock items before allocating them.
+
+Why was it needed? People needed to be able to see if a stock item was damaged or needed attention when allocating. 
+
+What are the relevant issue numbers?: Closes #10769
+
+Does this PR meet the acceptance criteria?:
+[ ] Tests added for new behavior
+[x] All tests passing
+[x] Follows Ruby style guide
+[x] No breaking changes
+
 
 **Maintainer Feedback:**
-- [Date]: [Summary of feedback received]
-- [Date]: [How you addressed it]
+- Jun 30: Opened PR #12286 against the upstream InvenTree repository. Review has been requested from SchrodingersGat as a code owner.
 
-**Status:** [Awaiting review / Iterating / Approved / Merged]
+**Status:** [Awaiting review]
 
 ---
 
@@ -217,15 +228,12 @@ Before opening the final PR, I plan to either find a safer way to scope the badg
 
 ### Technical Skills Gained
 
-[What you learned technically]
+I gained practice reusing existing UI components. This helped me better understand how to make a small frontend change while still keeping the behavior scoped to the correct places.
 
 ### Challenges Overcome
 
-[What was hard and how you solved it]
+The hardest part was making sure the badge appeared in the allocation dropdowns without affecting unrelated stock item dropdowns. My first implementation worked visually, but it was too broad. I then updated the approach so the status badge is controlled by an opt-in flag from the Build Order and Sales Order allocation fields.
 
-### What I'd Do Differently Next Time
-
-[Reflection on your process]
 
 ---
 
