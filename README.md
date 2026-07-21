@@ -4,7 +4,7 @@
 **Contribution Number:** [1]  
 **Student:** [Alonso Lopez]  
 **Issue:** [https://github.com/inventree/InvenTree/issues/10769]  
-**Status:** [Phase I] [In Progress]
+**Status:** [Phase 2] [In Progress]
 
 ---
 
@@ -117,7 +117,7 @@ Do not use the shopping-cart button, because that opens the Purchase Order workf
 
 ---
 
-## Solution Approach
+## Original Solution Approach
 
 **Understand:** The Allocate Stock dropdown shows part, location, batch, and quantity but not stock status, so users can't see an item is "Attention needed" or "Damaged" before allocating it.
 
@@ -187,9 +187,9 @@ Decisions made:
 I decided to keep the working implementation for the check-in so I could show progress, document the tradeoff, and continue iterating.
 Before opening the final PR, I plan to either find a safer way to scope the badge only to allocation dropdowns or ask for feedback on whether the renderer-based approach is acceptable.
 
-### Week [Y] Progress
+### Week [7] Progress — Maintainer Feedback and Revised Plan
 
-[Continue documenting as you work]
+After submitting PR #12286, I received feedback that the implementation should display stock status consistently rather than using allocation-specific opt-in checks. My initial PR modified three files so that only Build Order and Sales Order allocation fields could request the status badge. Although this kept the behavior narrowly scoped, it introduced extra conditions and complexity. Before modifying the PR, I documented the revised plan and identified the manual and automated checks needed to make sure shared stock-item dropdown behavior is not broken.
 
 ### Code Changes
 
@@ -219,8 +219,10 @@ Does this PR meet the acceptance criteria?:
 
 **Maintainer Feedback:**
 - Jun 30: Opened PR #12286 against the upstream InvenTree repository. Review has been requested from SchrodingersGat as a code owner.
-
-**Status:** [Awaiting review]
+- July 2026: The maintainer suggested displaying the stock status all the time rather than using the more complex opt-in and status-specific checks.
+- Based on this feedback, I returned to Phase II planning to revise the approach before updating the existing PR.
+  
+**Status:** [Revising implementation after maintainer feedback]
 
 ---
 
@@ -236,6 +238,58 @@ The hardest part was making sure the badge appeared in the allocation dropdowns 
 
 
 ---
+
+
+## Revised Solution Approach After Maintainer Feedback
+
+### Reason for Revision
+
+After submitting PR #12286, the maintainer suggested simplifying the implementation by displaying the stock status consistently rather than using conditional and opt-in checks to show only the “Attention Needed” and “Damaged” statuses.
+
+### Understand
+
+The stock item renderer currently displays identifying information such as the part, location, batch, and quantity, but it does not consistently display the stock item's status. My original solution added special checks so that only “Attention Needed” and “Damaged” badges appeared in Build Order and Sales Order allocation dropdowns.
+
+Based on the maintainer’s feedback, the revised goal is to display the available stock status as part of the standard stock item rendering rather than adding allocation-specific conditions.
+
+### Match
+
+`StatusRenderer` already provides InvenTree’s standard visual representation for model statuses, and `getStatusCodes(ModelType.stockitem)` provides the corresponding stock-item status definitions.
+
+The existing shared `RenderStockItem` function is the appropriate place for this behavior because it is responsible for presenting stock-item information wherever that renderer is used.
+
+### Plan
+
+1. Remove the opt-in property and allocation-specific checks introduced by the original implementation.
+2. Remove the conditional logic that limits rendering to only the `ATTENTION` and `DAMAGED` statuses.
+3. Use the stock item’s current status with `StatusRenderer` inside `RenderStockItem`.
+4. Display the status consistently whenever a stock item is rendered through this shared renderer.
+5. Remove any now-unnecessary changes from the Build Order and Sales Order allocation field definitions.
+6. Keep the implementation focused by reusing the existing status-rendering utilities rather than creating a new badge component.
+
+### Files Expected to Change
+
+- `src/frontend/src/components/render/Stock.tsx`
+- Any Build Order or Sales Order files previously modified only to pass the opt-in flag will be restored unless another change is still required.
+
+### Implement
+
+The revised implementation will be pushed to the existing `fix-issue-10769` branch and submitted as additional commits to PR #12286.
+
+### Review
+
+I will compare the revised changes against the maintainer’s feedback and InvenTree’s contribution guidelines. I will also review the final diff to confirm that the previous opt-in flag, status-specific conditions, and unnecessary allocation-field changes have been removed.
+
+### Evaluate
+
+I will verify that:
+
+1. Stock items with the “Attention Needed” status display their status.
+2. Stock items with the “Damaged” status display their status.
+3. Stock items with other statuses, including “OK,” also display their status when rendered.
+4. The status appears correctly in Build Order and Sales Order allocation dropdowns.
+5. Other locations that use `RenderStockItem` continue to display and select stock items correctly.
+6. Frontend formatting, linting, type-checking, and relevant tests pass.
 
 ## Resources Used
 
