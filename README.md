@@ -4,7 +4,7 @@
 **Contribution Number:** [1]  
 **Student:** [Alonso Lopez]  
 **Issue:** [https://github.com/inventree/InvenTree/issues/10769]  
-**Status:** [Phase 2] [In Progress]
+**Status:** [Phase 3] [In Progress]
 
 ---
 
@@ -196,6 +196,24 @@ After submitting PR #12286, I received feedback that the implementation should d
 - **Files modified:** [src/frontend/src/components/render/Stock.tsx]
 - **Key commits:** [[Commit Link Here](https://github.com/Alonso-Lopez-1/InvenTree/tree/fix-issue-10769)]
 - **Approach decisions:** [I reused InvenTree's existing StatusRenderer so the new badge matches the rest of the UI. I limited the badge logic to the Attention Needed and Damaged statuses because those are the statuses requested in the issue.]
+
+
+### Week [8] Progress
+This week, I began implementing the revised solution for InvenTree issue #10769 based on the feedback I received on PR #12286.
+
+The maintainer recommended simplifying my original implementation by displaying the stock status through the shared `RenderStockItem` renderer instead of using opt-in flags and allocation-specific checks. I began removing the more complex logic and attempted to render each stock item's status directly through the existing `StatusRenderer`.
+
+#### What I worked on
+
+- Reviewed the maintainer feedback and compared it against my original implementation.
+- Began removing the opt-in flag that was passed specifically by the Build Order and Sales Order allocation fields.
+- Revised the conditional logic that limited the badge to only the `ATTENTION` and `DAMAGED` statuses.
+- Attempted to display the current stock status directly inside the shared `RenderStockItem` function.
+- Continued reusing InvenTree's existing `StatusRenderer` and stock status definitions rather than creating a new badge component.
+
+#### Current challenge
+
+The simpler implementation is not displaying the status badge in the stock item dropdown. Although the stock item data is still being rendered correctly, adding the status through the shared renderer has not produced a visible badge with my current approach. This means I do not yet have a working replacement for the original implementation. I am currently investigating this issue to determine the cause. 
 
 ---
 
