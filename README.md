@@ -215,6 +215,35 @@ The maintainer recommended simplifying my original implementation by displaying 
 
 The simpler implementation is not displaying the status badge in the stock item dropdown. Although the stock item data is still being rendered correctly, adding the status through the shared renderer has not produced a visible badge with my current approach. This means I do not yet have a working replacement for the original implementation. I am currently investigating this issue to determine the cause. 
 
+## Week [9] Progress
+
+This week, I resolved the badge-rendering issue that I encountered during Week 8. I identified why the stock status badge was not appearing when I attempted to render it through the shared `RenderStockItem` function and was able to produce a working implementation.
+
+### What I Worked On
+
+- Investigated why the status badge was not rendering through the shared `RenderStockItem` function.
+- Identified and corrected the issue that prevented the badge from appearing.
+- Confirmed that the stock status can now be displayed as part of the secondary information rendered for a stock item.
+- Tested several approaches for controlling when and where the secondary status badge should appear.
+
+### Current Decision
+
+The shared-renderer approach appears to be the simplest implementation and is consistent with the previous feedback to avoid allocation-specific opt-in checks. However, this also means that the status badge would be displayed anywhere `RenderStockItem` is used rather than only in the Build Order and Sales Order allocation forms.
+
+Before finalizing the implementation, I reached out for clarification on whether the preferred solution is to keep the change as simple as possible and display the secondary status badge consistently in every form where `RenderStockItem` is utilized.
+
+### Current Status
+
+The badge-rendering problem from Week 8 has been resolved, and I now have a working implementation. I am waiting for clarification about the intended scope before selecting the final approach and updating PR #12286.
+
+### Next Steps
+
+- Review the feedback about whether the badge should appear everywhere `RenderStockItem` is used.
+- Finalize either the shared-renderer implementation or a more narrowly scoped alternative.
+- Test the selected approach across the forms and dropdowns that use `RenderStockItem`.
+- Confirm that stock-item selection and allocation behavior continue to work normally.
+- Update the existing pull request with the final implementation and testing results.
+
 ---
 
 ## Pull Request
