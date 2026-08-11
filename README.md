@@ -262,15 +262,37 @@ Based on the clarification I received, I now have an implementation that matches
 
 ### Screenshots
 
-Before resubmitting the changes, I am preparing screenshots that show how the updated status rendering appears throughout the application.These screenshots will help demonstrate the effect of using the shared `RenderStockItem` implementation and provide visual confirmation of how the new behavior appears in the different forms where the renderer is used.
+Before resubmitting the changes, I am preparing screenshots that show how the updated status rendering appears throughout the application.These screenshots will help demonstrate the effect of using the shared `RenderStockItem` implementation and provide visual confirmation of how the new behavior appears in the different forms where the renderer is used. These screenshots demonstrate some of the other areas where the badge will appear outside of the Sales Order, Build Order, and Transfer Order forms.
 
-<!-- Add screenshots here -->
+#### Consume Stock Item
 
-<!--
-![Example 1](Screenshots/week10-example-1.png)
-![Example 2](Screenshots/week10-example-2.png)
-![Example 3](Screenshots/week10-example-3.png)
--->
+The stock status badge is displayed when selecting a stock item through the Consume Stock Item interface.
+
+![Consume Stock Item Badge](Screenshots/Consume%20Stock%20Item%20Badge.png)
+
+#### Disassemble Stock Item
+
+The status badge is also displayed when selecting stock through the Disassemble Stock Item interface.
+
+![Disassemble Stock Item Badge](Screenshots/Disassemble%20Stock%20Item%20Badge.png)
+
+#### Global Search
+
+The shared renderer causes the stock status to also appear when a stock item is displayed through the global search interface.
+
+![Global Search Badge Display](Screenshots/Global%20Search%20Badge%20display.png)
+
+#### Installed Items Dropdown
+
+The stock status is displayed in the Installed Items dropdown where the shared stock item renderer is also utilized.
+
+![Installed Items Drop Down Badge](Screenshots/Installed%20Items%20Drop%20Down%20Badge.png)
+
+#### Stock Tracking After Installing
+
+The status badge continues to display when viewing the stock item through the Stock Tracking interface after installation.
+
+![Stock Tracking Badge After Installing](Screenshots/Stock%20Tracking%20Badge%20After%20Installing.png)
 
 ### Current Status
 
